@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    //   provider = "postgresql"
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+model Pokemon {
+    id           Int    @id @default(autoincrement())
+    pokemonId    Int
+    name         String
+    sprite       String
+    votesFor     Vote[] @relation("VotesFor")
+    votesAgainst Vote[] @relation("VotesAgainst")
+}
+
+model Vote {
+    id            Int     @id @default(autoincrement())
+    voteFor       Pokemon @relation(name: "VotesFor", fields: [voteForId], references: [id])
+    voteForId     Int
+    voteAgainst   Pokemon @relation(name: "VotesAgainst", fields: [voteAgainstId], references: [id])
+    voteAgainstId Int
+}
